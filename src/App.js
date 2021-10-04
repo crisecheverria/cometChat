@@ -9,21 +9,18 @@
 import React from 'react';
 import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import RootStackScreen from './screens/RootStack';
-import MainTabs from './screens/MainTabs';
-
-const Stack = createNativeStackNavigator();
+import Screens from './screens';
+import {AuthContextProvider} from './context/AuthContext';
 
 const App = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="Tabs" component={MainTabs} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <AuthContextProvider>
+        <NavigationContainer>
+          <Screens />
+        </NavigationContainer>
+      </AuthContextProvider>
     </SafeAreaView>
   );
 };

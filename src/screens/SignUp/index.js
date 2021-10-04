@@ -1,15 +1,52 @@
 import React from 'react';
 import {View, Image} from 'react-native';
 import {Input, Button} from 'react-native-elements';
+import {useAuth} from '../../context/AuthContext';
 import {styles} from './styles';
+import {CometChat} from '@cometchat-pro/react-native-chat';
+import {COMETCHAT_CONSTANTS} from '../../../CONSTS';
 
 export default function SignUp() {
   const [data, setData] = React.useState({
-    email: '',
     name: '',
-    username: '',
-    password: '',
+    uid: '',
   });
+
+  const {dispatchAuth} = useAuth();
+
+  const handleSignUp = async () => {
+    if (data.name !== '' && data.uid !== '') {
+      const user = new CometChat.User(data.uid);
+      user.setName(data.name);
+
+      try {
+        const newUser = await CometChat.createUser(
+          user,
+          COMETCHAT_CONSTANTS.AUTH_KEY,
+        );
+        console.log('User created: ', newUser);
+        dispatchAuth({type: 'REGISTER', user: {...newUser}});
+      } catch (error) {
+        console.log('error on createUser: ', error);
+      }
+
+      try {
+        const loggedUserInfo = await CometChat.login(
+          data.uid,
+          COMETCHAT_CONSTANTS.AUTH_KEY,
+        );
+        console.log('User is logged in: ', loggedUserInfo);
+        dispatchAuth({
+          type: 'LOGIN',
+          user: {...loggedUserInfo},
+          isLoggedIn: true,
+        });
+      } catch (error) {
+        console.log('error on login: ', error);
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -23,26 +60,15 @@ export default function SignUp() {
         <Input
           placeholder="username"
           leftIcon={{type: 'font-awesome', name: 'user'}}
-          onChangeText={value => setData({username: value})}
+          onChangeText={value => setData({...data, uid: value})}
         />
         <Input
           placeholder="name"
           leftIcon={{type: 'font-awesome', name: 'user'}}
-          onChangeText={value => setData({name: value})}
-        />
-        <Input
-          placeholder="email"
-          leftIcon={{type: 'font-awesome', name: 'user'}}
-          onChangeText={value => setData({email: value})}
-        />
-        <Input
-          placeholder="password"
-          leftIcon={{type: 'font-awesome', name: 'lock'}}
-          onChangeText={value => setData({password: value})}
-          secureTextEntry={true}
+          onChangeText={value => setData({...data, name: value})}
         />
 
-        <Button title="Sign Up" loading={false} />
+        <Button title="Sign Up" loading={false} onPress={handleSignUp} />
       </View>
     </View>
   );
