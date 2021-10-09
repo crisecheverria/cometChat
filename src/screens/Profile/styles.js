@@ -17,8 +17,6 @@ export const styles = StyleSheet.create({
   },
   body: {
     flex: 3,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
     paddingHorizontal: 5,
     paddingVertical: 30,
   },
