@@ -3,6 +3,7 @@ import {StyleSheet} from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   header: {
     flex: 2,
@@ -13,7 +14,12 @@ export const styles = StyleSheet.create({
     flex: 3,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+  },
+  buttonGroupContainer: {height: 30, borderRadius: 10},
+  selectedButtonGroup: {backgroundColor: '#ccc'},
+  ml10: {
+    marginLeft: 10,
   },
 });
