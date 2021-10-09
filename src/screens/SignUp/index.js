@@ -5,19 +5,26 @@ import {useAuth} from '../../context/AuthContext';
 import {styles} from './styles';
 import {CometChat} from '@cometchat-pro/react-native-chat';
 import {COMETCHAT_CONSTANTS} from '../../../CONSTS';
+import gravatar from 'gravatar-api';
 
 export default function SignUp() {
   const [data, setData] = React.useState({
     name: '',
     uid: '',
+    email: '',
   });
 
   const {dispatchAuth} = useAuth();
 
   const handleSignUp = async () => {
     if (data.name !== '' && data.uid !== '') {
-      const user = new CometChat.User(data.uid);
+      let user = new CometChat.User(data.uid);
       user.setName(data.name);
+      user.avatar = gravatar.imageUrl({
+        email: data.email,
+        parameters: {size: '500'},
+        secure: true,
+      });
 
       try {
         const newUser = await CometChat.createUser(
@@ -66,6 +73,12 @@ export default function SignUp() {
           placeholder="name"
           leftIcon={{type: 'font-awesome', name: 'user'}}
           onChangeText={value => setData({...data, name: value})}
+        />
+
+        <Input
+          placeholder="email"
+          leftIcon={{type: 'font-awesome', name: 'envelope'}}
+          onChangeText={value => setData({...data, email: value})}
         />
 
         <Button title="Sign Up" loading={false} onPress={handleSignUp} />
