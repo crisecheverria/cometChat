@@ -8,11 +8,13 @@ import SignUp from './SignUp';
 import Chats from './Chats';
 import People from './People';
 import Profile from './Profile';
+import Chat from './Chat';
 
 import {useAuth} from '../context/AuthContext';
 import {CometChat} from '@cometchat-pro/react-native-chat';
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 const Home = () => (
   <Tab.Navigator screenOptions={{tabBarActiveTintColor: 'blue'}}>
@@ -43,32 +45,21 @@ const Home = () => (
   </Tab.Navigator>
 );
 
-const AuthStack = createNativeStackNavigator();
-
 const AuthScreens = () => (
-  <AuthStack.Navigator>
-    <AuthStack.Screen name="SignIn" component={SignIn} />
-    <AuthStack.Screen name="SignUp" component={SignUp} />
-  </AuthStack.Navigator>
+  <Stack.Navigator>
+    <Stack.Screen name="SignIn" component={SignIn} />
+    <Stack.Screen name="SignUp" component={SignUp} />
+  </Stack.Navigator>
 );
 
-const MainStack = createNativeStackNavigator();
-
 const MainScreens = () => (
-  <MainStack.Navigator>
-    <MainStack.Screen
-      name="Home"
-      component={Home}
-      options={{headerShown: false}}
-    />
-    <MainStack.Group screenOptions={{presentation: 'modal'}}>
-      <MainStack.Screen
-        name="Profile"
-        component={Profile}
-        options={{title: ''}}
-      />
-    </MainStack.Group>
-  </MainStack.Navigator>
+  <Stack.Navigator>
+    <Stack.Screen name="Home" component={Home} options={{headerShown: false}} />
+    <Stack.Group screenOptions={{presentation: 'modal'}}>
+      <Stack.Screen name="Profile" component={Profile} options={{title: ''}} />
+    </Stack.Group>
+    <Stack.Screen name="Chat" component={Chat} options={{title: ''}} />
+  </Stack.Navigator>
 );
 
 const Screens = () => {
