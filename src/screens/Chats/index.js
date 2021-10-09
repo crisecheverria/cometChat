@@ -1,29 +1,26 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {styles} from './styles';
-import {CometChat} from '@cometchat-pro/react-native-chat';
-import {Button} from 'react-native-elements';
-import {useAuth} from '../../context/AuthContext';
 
-export default function Chats() {
-  const {dispatchAuth} = useAuth();
-  const handleLogout = () => {
-    CometChat.logout().then(
-      () => {
-        console.log('Logout completed successfully');
-        dispatchAuth({type: 'LOGOUT'});
-      },
-      //Logout completed successfully
-      error => {
-        //Logout failed with exception
-        console.log('Logout failed with exception:', {error});
-      },
-    );
-  };
+import {useAuth} from '../../context/AuthContext';
+import AvatarImage from '../../components/AvatarImage';
+
+export default function Chats({navigation}) {
+  const {auth} = useAuth();
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          <AvatarImage avatar={auth?.user?.avatar} style={styles.ml10} />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, auth]);
+
   return (
     <View style={styles.container}>
       <Text>Chats</Text>
-      <Button title="Log out" loading={false} onPress={handleLogout} />
     </View>
   );
 }
