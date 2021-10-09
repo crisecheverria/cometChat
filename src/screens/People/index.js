@@ -6,15 +6,6 @@ import {ButtonGroup, ListItem, Avatar, Badge} from 'react-native-elements';
 import {useAuth} from '../../context/AuthContext';
 import AvatarImage from '../../components/AvatarImage';
 
-const ListUsers = ({avatar, name}) => (
-  <ListItem key={avatar} bottomDivider>
-    <Avatar rounded source={{uri: avatar}} />
-    <ListItem.Content>
-      <ListItem.Title>{name}</ListItem.Title>
-    </ListItem.Content>
-  </ListItem>
-);
-
 export default function People({navigation}) {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [users, setUsers] = React.useState([]);
@@ -60,6 +51,18 @@ export default function People({navigation}) {
   const InactiveUsers = () => <Text>Inactive</Text>;
   const buttons = [{element: ActiveUsers}, {element: InactiveUsers}];
 
+  const ListUsers = (props, index) => (
+    <ListItem
+      key={index}
+      bottomDivider
+      onPress={() => navigation.push('Chat', {...props})}>
+      <Avatar rounded source={{uri: props.avatar}} />
+      <ListItem.Content>
+        <ListItem.Title>{props.name}</ListItem.Title>
+      </ListItem.Content>
+    </ListItem>
+  );
+
   console.log('Active Users: ', users);
 
   return (
@@ -76,12 +79,32 @@ export default function People({navigation}) {
         {selectedIndex === 0 &&
           users
             .filter(({status}) => status === 'online')
-            .map(user => <ListUsers {...user} />)}
+            .map((user, i) => (
+              <ListItem
+                key={i}
+                bottomDivider
+                onPress={() => navigation.push('Chat', {...user})}>
+                <Avatar rounded source={{uri: user.avatar}} />
+                <ListItem.Content>
+                  <ListItem.Title>{user.name}</ListItem.Title>
+                </ListItem.Content>
+              </ListItem>
+            ))}
 
         {selectedIndex === 1 &&
           users
             .filter(({status}) => status === 'offline')
-            .map(user => <ListUsers {...user} />)}
+            .map((user, i) => (
+              <ListItem
+                key={i}
+                bottomDivider
+                onPress={() => navigation.push('Chat', {...user})}>
+                <Avatar rounded source={{uri: user.avatar}} />
+                <ListItem.Content>
+                  <ListItem.Title>{user.name}</ListItem.Title>
+                </ListItem.Content>
+              </ListItem>
+            ))}
       </View>
     </View>
   );
