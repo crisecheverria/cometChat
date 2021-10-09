@@ -7,13 +7,14 @@ import SignIn from './Login';
 import SignUp from './SignUp';
 import Chats from './Chats';
 import People from './People';
+import Profile from './Profile';
 
 import {useAuth} from '../context/AuthContext';
 import {CometChat} from '@cometchat-pro/react-native-chat';
 
 const Tab = createBottomTabNavigator();
 
-const MainTabs = () => (
+const Home = () => (
   <Tab.Navigator screenOptions={{tabBarActiveTintColor: 'blue'}}>
     <Tab.Screen
       name="Chats"
@@ -42,13 +43,32 @@ const MainTabs = () => (
   </Tab.Navigator>
 );
 
-const Stack = createNativeStackNavigator();
+const AuthStack = createNativeStackNavigator();
 
-const RootStack = () => (
-  <Stack.Navigator>
-    <Stack.Screen name="SignIn" component={SignIn} />
-    <Stack.Screen name="SignUp" component={SignUp} />
-  </Stack.Navigator>
+const AuthScreens = () => (
+  <AuthStack.Navigator>
+    <AuthStack.Screen name="SignIn" component={SignIn} />
+    <AuthStack.Screen name="SignUp" component={SignUp} />
+  </AuthStack.Navigator>
+);
+
+const MainStack = createNativeStackNavigator();
+
+const MainScreens = () => (
+  <MainStack.Navigator>
+    <MainStack.Screen
+      name="Home"
+      component={Home}
+      options={{headerShown: false}}
+    />
+    <MainStack.Group screenOptions={{presentation: 'modal'}}>
+      <MainStack.Screen
+        name="Profile"
+        component={Profile}
+        options={{title: ''}}
+      />
+    </MainStack.Group>
+  </MainStack.Navigator>
 );
 
 const Screens = () => {
@@ -58,7 +78,7 @@ const Screens = () => {
     const retrieveUser = async () => {
       try {
         const user = await CometChat.getLoggedinUser();
-        console.log('<Screens /> isLoggedIn: ', user.authToken);
+
         if (user) {
           dispatchAuth({
             type: 'RETRIEVE_USER',
@@ -76,7 +96,7 @@ const Screens = () => {
 
   console.log('<Screens /> auth: ', auth);
 
-  return auth?.isLoggedIn === true ? <MainTabs /> : <RootStack />;
+  return auth?.isLoggedIn === true ? <MainScreens /> : <AuthScreens />;
 };
 
 export default Screens;
