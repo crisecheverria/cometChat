@@ -30,6 +30,8 @@ const reducer = (prevState, action) => {
         ...prevState,
         user: {},
         isLoggedIn: false,
+        error: null,
+        loading: false,
       };
 
     case 'RETRIEVE_USER':
@@ -39,6 +41,13 @@ const reducer = (prevState, action) => {
         isLoggedIn: action.isLoggedIn,
         error: null,
         loading: false,
+      };
+
+    case 'AUTH_FAILED':
+      return {
+        ...prevState,
+        error: action.error,
+        isLoggedIn: action.isLoggedIn,
       };
   }
 };

@@ -1,15 +1,16 @@
 import React from 'react';
 import {View, Image} from 'react-native';
 import {styles} from './styles';
-import {Input, Button} from 'react-native-elements';
+import {Input, Button, Chip} from 'react-native-elements';
 import {useAuth} from '../../context/AuthContext';
 import {CometChat} from '@cometchat-pro/react-native-chat';
 import {COMETCHAT_CONSTANTS} from '../../../CONSTS';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function Login({navigation}) {
   const [uid, setUsername] = React.useState('');
 
-  const {dispatchAuth} = useAuth();
+  const {auth, dispatchAuth} = useAuth();
 
   const handleSignIn = async () => {
     CometChat.login(uid, COMETCHAT_CONSTANTS.AUTH_KEY).then(
@@ -19,6 +20,11 @@ export default function Login({navigation}) {
       },
       error => {
         console.log('error on login: ', error);
+        dispatchAuth({
+          type: 'AUTH_FAILED',
+          error: error.message,
+          isLoggedIn: false,
+        });
       },
     );
   };
@@ -47,6 +53,17 @@ export default function Login({navigation}) {
           onPress={() => navigation.navigate('SignUp')}
         />
       </View>
+      {auth?.error !== null ? (
+        <Chip
+          title={auth.error}
+          icon={{
+            name: 'exclamation-circle',
+            type: 'font-awesome',
+            size: 20,
+            color: 'white',
+          }}
+        />
+      ) : null}
     </View>
   );
 }
